@@ -1,69 +1,65 @@
-
 #include <bits/stdc++.h>
 using namespace std;
 
-class Graph{
-    public:
-    int v;
-    vector<vector<int> > adj;
-    Graph(int v){
-        this-> v=  v;
-        adj.assign(v, vector<int> (v,0));
-    }
-    void addedge(int u,int v, int wt){
-        adj[u][v] = wt;
-        adj[v][u]  = wt;
+class Graph {
+public:
+    void mst(vector<vector<int>> adj[], int v) {
+        // Min-heap: {weight, {current_node, parent_node}}
+        priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<>> pq;
 
-    }
-    int minkey(vector<int>& key, vector<bool>& mstset){
-        int min = INT_MAX, minind =-1;
-        for(int i =0; i < v; i++){
-            if(!mstset[i] && key[i] < min){
-                min = key[i];
-                minind = i;
+        vector<int> vis(v, 0);
+        vector<int> parent(v, -1);
+        int sum = 0;
 
-            }
+        pq.push({0, {0, -1}});  // start from node 0 with weight 0 and no parent
 
-        }
-        return minind;
+        while (!pq.empty()) {
+            auto top = pq.top();
+            pq.pop();
 
-    }
+            int wt = top.first;
+            int node = top.second.first;
+            int par = top.second.second;
 
-    void mst(){
-        vector<int> parent(v,-1),  key(v,INT_MAX);
-        vector<bool> mstset(v,false);
-        key[0] = 0;
-        for(int i = 0 ; i < v-1; i++){
-            int u = minkey(key,  mstset);
+            if (vis[node]) continue;
 
-            mstset[u] = true;
-            for(int j =0; j < v ;j++  ){
-                    if(adj[u][j] && !mstset[j] && adj[u][j] < key[j]){
-                        parent[j] = u;
-                        key[j] = adj[u][j];
+            vis[node] = 1;
+            sum += wt;
+            parent[node] = par;
 
-                    }
+            for (auto& it : adj[node]) {
+                int adjnode = it[0];
+                int adjwt = it[1];
+                if (!vis[adjnode]) {
+                    pq.push({adjwt, {adjnode, node}});
+                }
             }
         }
 
-        int cost = 0;
-        for(int i = 1; i< v; i++){
-            cout<< parent[i] << "wt" << adj[parent[i]][i];
-            cost+= adj[i][parent[i]];
+        cout << "Edges in MST:\n";
+        for (int i = 0; i < v; i++) {
+            if (parent[i] != -1)
+                cout << parent[i] << " - " << i << endl;
         }
-        cout<<cost<<endl;
+        cout << "Total weight of MST: " << sum << endl;
     }
-
 };
-int main(){
-    int v,e;
-    cin>>v>>e;
-    Graph g(v);
 
-    for(int i =0;i < e; i++){
-        int u,v,w;
-        cin>>u>>v>>w;
-        g.addedge(u,v,w);
+int main() {
+    int v, e;
+    cin >> v >> e;
+    vector<vector<int>> adj[v];
+
+    for (int i = 0; i < e; i++) {
+        int u, vv, w;
+        cin >> u >> vv >> w;
+
+        adj[u].push_back({vv, w});
+        adj[vv].push_back({u, w});  // undirected graph
     }
-    g.mst();
+
+    Graph g;
+    g.mst(adj, v);
+
+    return 0;
 }

@@ -9,14 +9,12 @@ public:
     HashTable(int size){
         tablesize = size;
         arr.resize(size,-1);
-
     }
     int hash(int val){
         int sum =0;
         while(val>0){
             sum+= val%10;
             val /=10;
-
         }
         return sum%tablesize;
     }

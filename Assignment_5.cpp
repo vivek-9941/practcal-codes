@@ -5,7 +5,6 @@ class Node {
 public:
     string key, value;
     Node* next;
-    
     Node(string k, string v) {
         key = k;
         value = v;
