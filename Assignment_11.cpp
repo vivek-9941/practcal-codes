@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#include<fstream>
+#include <fstream>
 #include <cstdio>
 
 using namespace std;
@@ -70,60 +70,64 @@ public:
         }
         file.close();
     }
-    void deleterecord(int roll){
+    void deleterecord(int roll)
+    {
         file.open(filename, ios::in);
         fstream temp;
-        temp.open("temp" , ios:: out);
+        temp.open("temp", ios::out);
         bool found = 0;
-        file.read(reinterpret_cast<char*>(&s) , sizeof(s));
-        while(!file.eof()){
-            if(roll == s.roll){
-                cout<<"Deleted"<<endl;
+        file.read(reinterpret_cast<char *>(&s), sizeof(s));
+        while (!file.eof())
+        {
+            if (roll == s.roll)
+            {
+                cout << "Deleted" << endl;
                 found = true;
                 s.display();
-
             }
-            else{
-                temp.write(reinterpret_cast<char*>(&s) , sizeof(s));
-
+            else
+            {
+                temp.write(reinterpret_cast<char *>(&s), sizeof(s));
             }
-            file.read(reinterpret_cast<char*>(&s) , sizeof(s));
+            file.read(reinterpret_cast<char *>(&s), sizeof(s));
         }
-        if(!found){
-            cout<<"No record found"<<endl;
-
+        if (!found)
+        {
+            cout << "No record found" << endl;
         }
         file.close();
         temp.close();
         remove(filename.c_str());
-        rename("temp" , filename.c_str());
+        rename("temp", filename.c_str());
     }
 };
-int main() {
+int main()
+{
     Myfile File;
     int Choice;
     int R;
-    do {
-        cout<<"\n1: Add a record\n2: Display Database\n3: Delete a record\nEnter your choice: ";
-        cin>>Choice;
+    do
+    {
+        cout << "\n1: Add a record\n2: Display Database\n3: Delete a record\nEnter your choice: ";
+        cin >> Choice;
 
-        switch( Choice ) {
-            case 1:
-                File.addrecord();
-                break;
-                    
-            case 2:
-                File.displayfile();
-                break;
-                    
-            case 3:
-                cout<<"Enter the record you want to delete: ";
-                cin>>R;
-                File.deleterecord(R);
-                break;
+        switch (Choice)
+        {
+        case 1:
+            File.addrecord();
+            break;
+
+        case 2:
+            File.displayfile();
+            break;
+
+        case 3:
+            cout << "Enter the record you want to delete: ";
+            cin >> R;
+            File.deleterecord(R);
+            break;
         }
-    }
-    while(Choice<6);
-    cout<<endl;
+    } while (Choice < 6);
+    cout << endl;
     return 0;
 }
